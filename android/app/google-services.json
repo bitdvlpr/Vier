@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "168499171679",
+    "firebase_url": "https://ortoloop.firebaseio.com",
+    "project_id": "ortoloop",
+    "storage_bucket": "ortoloop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168499171679:android:ba3e8858e07ee9f6dbe6ea",
+        "android_client_info": {
+          "package_name": "com.ortoloop.vier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168499171679-jm9i762j6stdjr64a2ib08b7qdm7r8qr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDONX5LqtrBEi5Aw-XVOCUJ3xLg2WNB13Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168499171679-jm9i762j6stdjr64a2ib08b7qdm7r8qr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
