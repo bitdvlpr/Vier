@@ -1,5 +1,6 @@
 import 'package:Vier/model/datapointnotifier.dart';
 import 'package:Vier/model/locationnotifier.dart';
+import 'package:Vier/screens/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:Vier/screens/main_screen.dart';
 import 'package:Vier/screens/login_screen.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         WalletScreen.id: (context) => WalletScreen(),
         ChatRoom.id: (context) => ChatRoom(),
         HomeScreen.id: (context) => HomeScreen(),
+        ForgotPassword.id: (context) => ForgotPassword(),
       },
     );
   }

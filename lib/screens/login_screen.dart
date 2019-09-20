@@ -1,6 +1,7 @@
 import 'package:Vier/components/dialogwidget.dart';
 import 'package:Vier/encrypt/encrypt.dart';
 import 'package:Vier/model/authProblems.dart';
+import 'package:Vier/screens/forgot_password_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,10 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.transparent,
                               onPressed: () {
                                 //TODO: Create a forgot password screen
-                                /*Navigator.push(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MainPage()));*/
+                                        builder: (context) => ForgotPassword()));
                               },
                             ),
                             SizedBox(

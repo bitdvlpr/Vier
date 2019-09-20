@@ -9,12 +9,14 @@ class Todo {
   String title;
   String details;
   String category;
+  String datetime;
 
   Todo({
     this.id,
     this.title,
     this.details,
     this.category,
+    this.datetime
   });
 
 
@@ -23,6 +25,7 @@ class Todo {
     title: map["title"],
     details: map["details"],
     category: map["categories"],
+    datetime: map['datetime']
   );
 
   Map<String, dynamic> toMap() => {

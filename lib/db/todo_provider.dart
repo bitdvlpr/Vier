@@ -33,6 +33,7 @@ class TodoProvider {
           title TEXT NOT NULL, 
           details TEXT NOT NULL,
           categories TEXT NOT NULL
+          datetime TEXT NOT NULL
       )
       ''');
       },
@@ -63,7 +64,7 @@ class TodoProvider {
     final db = await database;
     var response = await db.query(
       "storage",
-      columns: ["id","title", "details", "categories"],
+      columns: ["id","title", "details", "categories","datetime"],
       where: "id = ?",
       whereArgs: [id],
     );
@@ -76,7 +77,7 @@ class TodoProvider {
     final db = await database;
     var response = await db.query(
       "storage",
-      columns: ["id","title", "details", "categories"],
+      columns: ["id","title", "details", "categories","datetime"],
       orderBy: "id DESC"
     );
 

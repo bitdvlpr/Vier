@@ -100,6 +100,13 @@ class _ItemStorageState extends State<ItemStorage> {
                   Text(
                     widget.todo.details,
                     style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    widget.todo.datetime,
+                    style: TextStyle(
                       fontSize: 15,
                     ),
                   ),

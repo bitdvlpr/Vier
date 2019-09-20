@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class ChatMessage extends StatelessWidget {
@@ -70,6 +71,14 @@ class ChatMessage extends StatelessWidget {
     }
   }
 
+  String timestamp(){
+    DateTime date = new DateTime.fromMillisecondsSinceEpoch(documentSnapshot['timestamp'] );
+    var formatter = new DateFormat('h:mm a dd-MM-yyyy');
+    String formatted = formatter.format(date);
+    print(formatted);
+
+    return formatted;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +92,10 @@ class ChatMessage extends StatelessWidget {
             style: TextStyle(color: Colors.grey, fontSize: 10.0),
           ),
           TextImageDisplay(context),
-        //snapshot.data.documents.reversed
+          Text(
+            timestamp() ?? ' ',
+            style: TextStyle(color: Colors.grey, fontSize: 10.0),
+          ),
         ],
 
       ),

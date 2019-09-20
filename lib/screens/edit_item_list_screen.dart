@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 import 'package:Vier/constants.dart';
 import 'package:Vier/components/RoundEdgeFlatButton.dart';
 import 'package:Vier/db/todo_provider.dart';
+import 'package:intl/intl.dart';
 
 
 class StorageEditItem extends StatefulWidget {
@@ -34,6 +35,15 @@ class _StorageEditItemState extends State<StorageEditItem> {
   String item = 'Food';
   String details= '' ;
 
+
+  String datetime(){
+    var now = new DateTime.now();
+    var formatter = new DateFormat('h:mm a dd-MM-yyyy');
+    String formatted = formatter.format(now);
+    print(formatted);
+
+    return formatted;
+  }
 
   void todostatus(){
     if(widget.todo==null) {
@@ -175,11 +185,11 @@ class _StorageEditItemState extends State<StorageEditItem> {
                  }, color: Colors.white,visible: true,) : RoundEdgeFlatButton(title: 'Pay', ontap: (){}, color: Colors.transparent,visible: false,),
                 RoundEdgeFlatButton(title: 'Save',ontap: () async{
                  if(widget.todo==null) {
-                   await _todoProvider.insert(Todo(title: title,details: details,category: item,));
+                   await _todoProvider.insert(Todo(title: title,details: details,category: item,datetime: datetime()));
                    Navigator.pop(context);
                  }else{
-                   print('${widget.todo.id} $title $details $item' );
-                  await _todoProvider.update(Todo(id: widget.todo.id,title: title,details: details,category: item,));
+                   print('${widget.todo.id} $title $details $item ${datetime()}' );
+                  await _todoProvider.update(Todo(id: widget.todo.id,title: title,details: details,category: item,datetime: datetime()));
                    Navigator.pop(context);
                  }
                 } ,color: Colors.white,visible: true,),
