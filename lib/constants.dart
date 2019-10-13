@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:Vier/screens/wallet_screen.dart';
@@ -9,30 +10,32 @@ import 'package:Vier/screens/home_screen.dart';
 
 List<BottomNavigationBarItem> bottomnavitem = [
   BottomNavigationBarItem(
-    icon: GestureDetector(
-      child: Icon(
-        MaterialCommunityIcons.home_outline,
-      ),
+    icon: Icon(
+      CupertinoIcons.home,
     ),
     title: Text(
       '',
     ),
   ),
   BottomNavigationBarItem(
-    icon: GestureDetector(
-      child: Icon(
-        MaterialCommunityIcons.camera_enhance_outline,
-      ),
+    icon: Icon(
+      CupertinoIcons.collections,
     ),
     title: Text(
       '',
     ),
   ),
   BottomNavigationBarItem(
-    icon: GestureDetector(
-      child: Icon(
-        Icons.person_outline,
-      ),
+    icon: Icon(
+      CupertinoIcons.folder_open,
+    ),
+    title: Text(
+      '',
+    ),
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(
+      CupertinoIcons.person,
     ),
     title: Text(
       '',
@@ -94,4 +97,33 @@ const List<String> picker = [
 ];
 
 
-
+//List Of Food Item For All ventures
+const kAmala = 'Amala';
+const kFufu = 'FuFu';
+const kCowSkin = 'Cow Skin';
+const kEefo = 'Eefo';
+const kStew = 'Stew';
+const kMeat = 'Meat';
+const kFish = 'Fish';
+const kFiredPlantain =  'Fried Plantian';
+const kBoiledEgg = 'Boiled Egg';
+const kSpahgetti = 'Spahgetti';
+const kBeans = 'Beans';
+const kWhiteRice = 'White Rice';
+const kBread = 'Bread';
+const kPureWater = 'Pure Water';
+const kBottleWater ='Bottle Water';
+const kPepsi = 'Pepsi Bottle Drink';
+const kBigiCola = 'Bigi Cola Bottle Drink';
+const kBigiLemon = 'Bigi Lemon Bottle Drink';
+const kCocaCola = 'Coca Cola Bottle Drink';
+const kSalad = 'Salad';
+const kNoodles = 'Noodles';
+const kChicken ='Chicken';
+const kYam = 'Yam';
+const kJollofRice = 'Jollof Rice';
+const kFriedEgg = 'Fried Egg';
+const kFriedRice = 'Fried Rice';
+const kSuya = 'Suya';
+const kSharwama ='Sharwama';
+//End Of The List For Now

@@ -1,11 +1,12 @@
 import 'package:Vier/model/locationnotifier.dart';
-import 'package:Vier/services/location.dart';
-import 'package:Vier/services/weatherapiclient.dart';
+import 'package:Vier/api/services/location.dart';
+import 'package:Vier/api/services/weatherapiclient.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Vier/model/weather.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final _newsfire = Firestore.instance;
 class HomeScreen extends StatefulWidget {
@@ -50,76 +51,78 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<LocationNotifier>(
-      builder: (BuildContext context, locationnotify, _) => Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          FutureBuilder<Weather>(
-            future: weatherApi.getweather(latitude: locationnotify.latitude,longitude: locationnotify.longitude),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return (!snapshot.hasData)
-                      ? CupertinoActivityIndicator(
-                          animating: true,
-                          radius: 10.0,
-                        )
-                      : Text(
-                          "Hello World",
-                          style: TextStyle(color: Colors.transparent),
-                        );
-                  break;
-                default:
-                 return (snapshot.hasData) ? weatherdisplay(context, snapshot) : CupertinoActivityIndicator(
-                   animating: true,
-                   radius: 10.0,
-                 );
-              }
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'News',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
-                )),
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: _newsfire.collection('NewsRunner').orderBy('timestamp',descending: true).snapshots(),
+      builder: (BuildContext context, locationnotify, _) => Padding(
+        padding: const EdgeInsets.only(bottom:50.0),
+        child: ListView(
+          children: <Widget> [
+            FutureBuilder<Weather>(
+              future: weatherApi.getweather(latitude: locationnotify.latitude,longitude: locationnotify.longitude),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
                     return (!snapshot.hasData)
                         ? CupertinoActivityIndicator(
-                            animating: true,
-                            radius: 10.0,
-                          )
+                      animating: true,
+                      radius: 10.0,
+                    )
                         : Text(
-                            "Hello World",
-                            style: TextStyle(color: Colors.transparent),
-                          );
+                      "Hello World",
+                      style: TextStyle(color: Colors.transparent),
+                    );
                     break;
                   default:
-                    return Expanded(
-                      child: ListView.builder(
+                    return (snapshot.hasData) ? weatherdisplay(context, snapshot) : CupertinoActivityIndicator(
+                      //TODO: Change this to a searching network gif
+                      animating: true,
+                      radius: 10.0,
+                    );
+                }
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'News',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  )),
+            ),
+            StreamBuilder<QuerySnapshot>(
+                stream: _newsfire.collection('NewsRunner').orderBy('timestamp',descending: true).snapshots(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return (!snapshot.hasData)
+                          ? CupertinoActivityIndicator(
+                              animating: true,
+                              radius: 10.0,
+                            )
+                          : Text(
+                              "Hello World",
+                              style: TextStyle(color: Colors.transparent),
+                            );
+                      break;
+                    default:
+                      return ListView.builder(
                         physics: ClampingScrollPhysics(),
                         itemCount: snapshot.data.documents.length,
                          itemBuilder: (BuildContext context, int index)
                          {
+
                            return NewTiles(documentSnapshot: snapshot.data.documents[index],);
                            },
-                      ),
-                    );
-                }
-              }),
-        ],
+                        shrinkWrap: true,
+                      );
+                  }
+                }),
+        ]
+        ),
       ),
     );
   }
@@ -137,39 +140,50 @@ class NewTiles extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10.0),),
       ),
       elevation: 0.0,
-      child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.all_inclusive,),
-          ],
-        ),
-        title: Text(
-          documentSnapshot['title'],
-          style: TextStyle(
-            fontSize: 15,
+      child: GestureDetector(
+        onTap: () async{
+          if(await canLaunch(documentSnapshot['url'])){
+            await launch(documentSnapshot['urll']);
+          }else{
+            throw 'Cloud not launch url';
+          }
+        },
+        child: ListTile(
+          leading: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.all_inclusive,),
+            ],
           ),
-        ),
-        subtitle: Column(
+          title: Text(
+            documentSnapshot['title'],
+            style: TextStyle(
+              fontSize: 15,
+            ),
+            maxLines: 1,
+          ),
+          subtitle: Column(
 
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              documentSnapshot['story'],
-              style: TextStyle(
-                fontSize: 12,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                '${documentSnapshot['story']}...Read More',
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+                maxLines: 2,
               ),
-            ),
-            Text(
-              documentSnapshot['timestamp'],
-              style: TextStyle(
-                fontSize: 10,
+              Text(
+                documentSnapshot['timestamp'],
+                style: TextStyle(
+                  fontSize: 10,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          //trailing: , TODO: comment feature later upgrade
         ),
-        //trailing: , TODO: comment feature later upgrade
       ),
     );
   }
@@ -214,31 +228,12 @@ Widget weatherdisplay (BuildContext context,AsyncSnapshot<Weather> snapshot){
     height: MediaQuery.of(context).size.height/3,
     width: MediaQuery.of(context).size.width,
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SizedBox(
-          width: 10.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Amount Left: \n #900000',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceSansPro'),
-            ),
-          ],
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             weather.weathertemperature(context, '$ic' ?? ''),
-            SizedBox(
-              width: 10.0,
-            ),
             Text(
               '${tempe ?? 0}° ',
               style: TextStyle(
@@ -248,9 +243,6 @@ Widget weatherdisplay (BuildContext context,AsyncSnapshot<Weather> snapshot){
               textAlign: TextAlign.center,
             ),
           ],
-        ),
-        SizedBox(
-          width: 10.0,
         ),
       ],
     ),

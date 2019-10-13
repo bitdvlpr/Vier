@@ -32,7 +32,7 @@ class TodoProvider {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL, 
           details TEXT NOT NULL,
-          categories TEXT NOT NULL
+          categories TEXT NOT NULL,
           datetime TEXT NOT NULL
       )
       ''');

@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
 
@@ -73,7 +73,17 @@ class _ChatRoomState extends State<ChatRoom> {
   Future getImage(BuildContext context) async {
     _image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-    final isLoading = ProgressHUD.of(context);
+    final isLoading = new ProgressDialog(context,type: ProgressDialogType.Normal,isDismissible: false,showLogs: false);
+    isLoading.style(
+      message: "Please wait...",
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+     // progressWidget: CircularProgressIndicator(),
+      elevation: 4.0,
+      insetAnimCurve: Curves.easeInOut,
+
+    );
+
 
     if (_image != null) {
       setState(() {
@@ -85,7 +95,17 @@ class _ChatRoomState extends State<ChatRoom> {
 
   Future uploadFile(BuildContext context) async {
     String fileName = '$chatid${DateTime.now().millisecondsSinceEpoch.toString()}';
-    final isLoading = ProgressHUD.of(context);
+
+    final isLoading = new ProgressDialog(context,type: ProgressDialogType.Normal,isDismissible: false,showLogs: false);
+    isLoading.style(
+      message: "Please wait...",
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      progressWidget: CircularProgressIndicator(),
+      elevation: 4.0,
+      insetAnimCurve: Curves.easeInOut,
+
+    );
 
     final StorageReference storageReference =
         FirebaseStorage.instance.ref().child(fileName);
@@ -158,9 +178,7 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
         centerTitle: true,
       ),
-      body: ProgressHUD(
-        child: Builder(
-          builder: (context) => SafeArea(
+      body: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -256,8 +274,6 @@ class _ChatRoomState extends State<ChatRoom> {
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 }

@@ -72,7 +72,7 @@ class ChatMessage extends StatelessWidget {
   }
 
   String timestamp(){
-    DateTime date = new DateTime.fromMillisecondsSinceEpoch(documentSnapshot['timestamp'] );
+    DateTime date = new DateTime.fromMillisecondsSinceEpoch(int.tryParse(documentSnapshot['timestamp'] ));
     var formatter = new DateFormat('h:mm a dd-MM-yyyy');
     String formatted = formatter.format(date);
     print(formatted);

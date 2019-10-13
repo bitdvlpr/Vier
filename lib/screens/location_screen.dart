@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Vier/services/location.dart';
+import 'package:Vier/api/services/location.dart';
 import 'dart:async';
 import 'package:Vier/screens/main_screen.dart';
 

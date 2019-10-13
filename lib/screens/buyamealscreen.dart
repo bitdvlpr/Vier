@@ -8,7 +8,7 @@ class BuyaMeal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: kMainColor,
-      child: Cafeteria(),
+      child: AllCafeteria(),
 
     );
   }

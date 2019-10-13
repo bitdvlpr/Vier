@@ -3,12 +3,20 @@
 import 'package:flutter/material.dart';
 
 class DeliveryNotifier with ChangeNotifier{
-  bool _delivery=false;
+  Map<int,bool> _delivery = {
+    0:false,
+    1:false,
+    2:false,
+    3:false,
+    4:false,
+  };
 
-  bool get delivery => _delivery;
 
-   mdelivery(bool value) {
-    _delivery = value;
+
+ delivery(int index) => _delivery.values.elementAt(index);
+
+  mdelivery(int index,bool value) {
+    _delivery.update(index, (val)=>value);
     notifyListeners();
   }
 

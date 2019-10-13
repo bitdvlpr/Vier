@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:Vier/services/location.dart';
+import 'package:Vier/api/services/location.dart';
 import 'dart:async';
 import 'package:Vier/screens/location_screen.dart';
 import 'package:flutter/cupertino.dart';

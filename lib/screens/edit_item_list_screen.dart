@@ -1,3 +1,4 @@
+import 'package:Vier/screens/buyamealscreen.dart';
 import 'package:Vier/model/todo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,10 +38,14 @@ class _StorageEditItemState extends State<StorageEditItem> {
 
 
   String datetime(){
-    var now = new DateTime.now();
-    var formatter = new DateFormat('h:mm a dd-MM-yyyy');
-    String formatted = formatter.format(now);
-    print(formatted);
+    String formatted;
+    setState(() {
+      var now = new DateTime.now();
+      var formatter = new DateFormat('h:mm a dd-MM-yyyy');
+       formatted = formatter.format(now);
+      print(formatted);
+
+    });
 
     return formatted;
   }
@@ -67,6 +72,9 @@ class _StorageEditItemState extends State<StorageEditItem> {
   void initState() {
     super.initState();
     todostatus();
+
+     print( datetime());
+
   }
 
   DropdownButton androidpicker(BuildContext context){
@@ -118,58 +126,54 @@ class _StorageEditItemState extends State<StorageEditItem> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: messagecontroller_title,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding:
-                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0),),
+            TextField(
+              maxLines: 1,
+              controller: messagecontroller_title,
+              decoration: InputDecoration(
+                focusColor: Colors.transparent,
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
                   ),
-                  labelText: 'Title',
+                  borderRadius: BorderRadius.all(Radius.circular(0.0),),
                 ),
-                onChanged: (value){
-                    title = value;
-                },
+                labelText: 'Title',
               ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: messagecontroller_details,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding:
-                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0),),
-                  ),
-                  hintText: 'Get things done ',
-                ),
               onChanged: (value){
-                    details = value;
+                  title = value;
               },
-              //TODO: Find more about this widget
+            ),
+            TextField(
+              controller: messagecontroller_details,
+              maxLines: 15,
+              decoration: InputDecoration(
+                focusColor: Colors.transparent,
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(0.0),),
+                ),
+                hintText: 'Get things done ',
               ),
+            onChanged: (value){
+                  details = value;
+            },
+            //TODO: Find more about this widget
             ),
 
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 50.0,),
+                padding: EdgeInsets.symmetric(horizontal: 50.0,),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(30.0),),
@@ -179,19 +183,31 @@ class _StorageEditItemState extends State<StorageEditItem> {
             Row(
               mainAxisAlignment: item == 'Food' ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center ,
               children: <Widget>[
-                 item == 'Food' ? RoundEdgeFlatButton(title: 'Pay', ontap: (){
+                item == 'Food' ? RoundEdgeFlatButton(title: 'Buy a meal', ontap: () async{
+                  if(widget.todo==null) {
+                    print(' $title $details $item ${datetime()}' );
+                    await _todoProvider.insert(Todo(title: title,details: details,category: item,datetime: datetime()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> BuyaMeal()));
+                  }else{
+                    print('${widget.todo.id} $title $details $item ${datetime()}' );
+                    await _todoProvider.update(Todo(id: widget.todo.id,title: title,details: details,category: item,datetime: datetime()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> BuyaMeal()));
+                  }
 
-                   //TODO: Pay into the seller account , update chart,send , message using cloudsms
-                 }, color: Colors.white,visible: true,) : RoundEdgeFlatButton(title: 'Pay', ontap: (){}, color: Colors.transparent,visible: false,),
+                  //TODO: Show dialog
+                  //TODO: Pay into the seller account , update chart,send , message using cloudsms
+
+                }, color: Colors.white,visible: true,) : RoundEdgeFlatButton(title: 'Pay', ontap: (){}, color: Colors.transparent,visible: false,),
                 RoundEdgeFlatButton(title: 'Save',ontap: () async{
-                 if(widget.todo==null) {
-                   await _todoProvider.insert(Todo(title: title,details: details,category: item,datetime: datetime()));
-                   Navigator.pop(context);
-                 }else{
-                   print('${widget.todo.id} $title $details $item ${datetime()}' );
-                  await _todoProvider.update(Todo(id: widget.todo.id,title: title,details: details,category: item,datetime: datetime()));
-                   Navigator.pop(context);
-                 }
+                  if(widget.todo==null) {
+                    print(' $title $details $item ${datetime()}' );
+                    await _todoProvider.insert(Todo(title: title,details: details,category: item,datetime: datetime()));
+                    Navigator.pop(context);
+                  }else{
+                    print('${widget.todo.id} $title $details $item ${datetime()}' );
+                    await _todoProvider.update(Todo(id: widget.todo.id,title: title,details: details,category: item,datetime: datetime()));
+                    Navigator.pop(context);
+                  }
                 } ,color: Colors.white,visible: true,),
               ],
             )

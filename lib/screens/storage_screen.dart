@@ -23,45 +23,48 @@ class _StorageScreenState extends State<StorageScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: <Widget>[
-          FutureBuilder<List<Todo>>(
-            future: todoProvider.fetchall(),
-            builder: (BuildContext context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return (!snapshot.hasData)
-                      ? CupertinoActivityIndicator(
-                          animating: true,
-                          radius: 10.0,
-                        )
-                      : Text(
-                          "Hello World",
-                          style: TextStyle(color: Colors.transparent),
-                        );
-                  break;
-                default:
-                  print(snapshot.data);
-                  return (snapshot.hasData)? Expanded(
-                    child: ListView.builder(
-                       itemCount:snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                         Todo todo = snapshot.data[index];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: Column(
+          children: <Widget>[
+            FutureBuilder<List<Todo>>(
+              future: todoProvider.fetchall(),
+              builder: (BuildContext context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                  case ConnectionState.waiting:
+                    return (!snapshot.hasData)
+                        ? CupertinoActivityIndicator(
+                            animating: true,
+                            radius: 10.0,
+                          )
+                        : Text(
+                            "Hello World",
+                            style: TextStyle(color: Colors.transparent),
+                          );
+                    break;
+                  default:
+                    print(snapshot.data);
+                    return (snapshot.hasData)? Expanded(
+                      child: ListView.builder(
+                         itemCount:snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                           Todo todo = snapshot.data[index];
 
-                         return ItemStorage(todo: todo,);
-                      },
-                    ),
-                  ): CupertinoActivityIndicator(
-                    animating: true,
-                    radius: 10.0,
-                  );
-              }
-            },
-          ),
+                           return ItemStorage(todo: todo,);
+                        },
+                      ),
+                    ): CupertinoActivityIndicator(
+                      animating: true,
+                      radius: 10.0,
+                    );
+                }
+              },
+            ),
 
-        ],
-      );
+          ],
+        ),
+    );
   }
 }
 
@@ -83,45 +86,36 @@ class _ItemStorageState extends State<ItemStorage> {
     return Dismissible(
 
       child: Card(
-
         elevation: 0.0,
         child: ListTile(
-          title: Row(
+          title: Column(
+             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Column(
-                 mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    widget.todo.title,
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    widget.todo.details,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    widget.todo.datetime,
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
+              Text(
+                widget.todo.title,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: 1,
+              ),
+              Text(
+                widget.todo.details,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: 2,
               ),
             ],
           ),
           subtitle: Text(
           widget.todo.category,
           style: TextStyle(
+            color: Colors.red,
           fontSize: 15,
         ),
         ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
+          trailing: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.mode_edit),
@@ -133,6 +127,14 @@ class _ItemStorageState extends State<ItemStorage> {
                  }
 
                 },
+              ),
+              Expanded(
+                child: Text(
+                  'Last modified: ${widget.todo.datetime}',
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
               ),
               /*IconButton(
                 icon: Icon(Icons.delete_outline),

@@ -3,10 +3,11 @@ import 'dart:io' show Platform;
 import 'package:Vier/components/dialogwidget.dart';
 import 'package:Vier/encrypt/encrypt.dart';
 import 'package:Vier/model/authProblems.dart';
+import 'package:Vier/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main_screen.dart';
 import 'package:Vier/components/text_field_form_data.dart';
@@ -23,6 +24,7 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
 
   DialogWidget _dialogWidget;
+  ProgressDialog _progressDialog;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -40,9 +42,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       backgroundColor: kMainColor,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
-      body: ProgressHUD(
-        child: Builder(
-          builder:(context) => Column(
+      body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -120,16 +120,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             FloatingActionButton(
                               onPressed: () async{
 
-                                final progress = ProgressHUD.of(context);
+                                _progressDialog = new ProgressDialog(context,type: ProgressDialogType.Normal,isDismissible: false,showLogs: false);
+                                _progressDialog.style(
+                                  message: "Please wait...",
+                                  borderRadius: 10.0,
+                                  backgroundColor: Colors.white,
+                                  //progressWidget: CircularProgressIndicator(),
+                                  elevation: 4.0,
+                                  insetAnimCurve: Curves.easeInOut,
+
+                                );
+
                                 Platform.isAndroid
-                                    ? progress.show()
+                                    ? _progressDialog.show()
                                     : _dialogWidget.iosprogress();
 
                                 try {
 
                                   final user = await _auth.createUserWithEmailAndPassword(
                                       email: '$idemail@ortoloop.com',
-                                      password: idpassword);
+                                      password: _encrypt.encrypt(idpassword));
 
                                   //TODO: save the staff id / matric id  three value i.e.  17N02/001  get the 'N' alphabetic to use in the chat message firetore
 
@@ -144,10 +154,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     prefs.setString("phoneno", phoneno);
 
                                     //3,9
-                                    print(idemail.substring(3,9));
-                                    print(_encrypt.encrypt(idemail.substring(3,9)));
+                                    print(idemail.substring(0,4));
+                                    print(_encrypt.encrypt(idemail.substring(0,4)));
 
-                                    prefs.setString("chatid",_encrypt.encrypt(idemail.substring(3,9)));
+                                    prefs.setString("chatid",_encrypt.encrypt(idemail.substring(0,4)));
 
                                     Navigator.push(
                                         context,
@@ -167,7 +177,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         "Please enter your details");
                                   }
 
-                                  progress.dismiss();
+                                  _progressDialog.dismiss();
 
                                 }on PlatformException catch (e) {
                                   authProblems errorType;
@@ -245,14 +255,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             )
                           ],
                         ),
-                        Text(
-                          "Already have an account?Log In",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 15,
-                            color: kMainColor,
+                        FlatButton(
+                          child: Text(
+                            "Already have an account?Log In",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 15,
+                              color: kMainColor,
+                            ),
                           ),
+                          color: Colors.transparent,
+                          onPressed: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          },
                         )
                       ],
                     ),
@@ -260,8 +279,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ],
             ),
-        ),
-      ),
     );
   }
 }
